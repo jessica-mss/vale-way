@@ -1,6 +1,7 @@
 package br.com.valeway.router.transportation.config;
 
 import br.com.valeway.router.transportation.domain.AppUser;
+import br.com.valeway.router.transportation.exception.InvalidTokenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -41,18 +42,13 @@ public class TokenService {
                        .verify(token)
                        .getSubject();
            } catch (JWTVerificationException exception) {
-               return null;
+               throw new InvalidTokenException("Token inválido ou expirado");
            }
     }
-
 
     private Instant generateExpirationDate() {
         return LocalDateTime.now()
                 .plusHours(2)
                 .toInstant(ZoneOffset.ofHours(-3));
     }
-
-
-
-
 }

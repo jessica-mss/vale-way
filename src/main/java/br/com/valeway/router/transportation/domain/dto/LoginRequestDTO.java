@@ -1,4 +1,6 @@
 package br.com.valeway.router.transportation.domain.dto;
 
-public record LoginRequestDTO(String email, String password) {
+import jakarta.validation.constraints.NotNull;
+
+public record LoginRequestDTO(@NotNull String email, String password) {
 }
