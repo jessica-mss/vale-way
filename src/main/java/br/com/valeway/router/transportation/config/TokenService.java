@@ -26,6 +26,7 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("login-auth-api") // Define o emissor do token
                     .withSubject(user.getEmail()) // Define o assunto do token (neste caso, o nome de usuário)
+                    .withClaim("role", user.getUserType())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm); // Assina o token usando o algoritmo especificado
         } catch (JWTCreationException exception){

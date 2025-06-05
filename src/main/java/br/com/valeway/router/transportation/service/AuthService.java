@@ -2,9 +2,11 @@ package br.com.valeway.router.transportation.service;
 
 import br.com.valeway.router.transportation.config.TokenService;
 import br.com.valeway.router.transportation.domain.AppUser;
+import br.com.valeway.router.transportation.domain.UserType;
 import br.com.valeway.router.transportation.domain.dto.LoginRequestDTO;
 import br.com.valeway.router.transportation.domain.dto.LoginResponseDTO;
 import br.com.valeway.router.transportation.domain.dto.RegisterDTO;
+import br.com.valeway.router.transportation.exception.BadRequestException;
 import br.com.valeway.router.transportation.exception.InvalidCredentialsException;
 import br.com.valeway.router.transportation.exception.UserAlreadyExistsException;
 import br.com.valeway.router.transportation.repository.UserRepository;
@@ -45,10 +47,18 @@ public class AuthService {
             AppUser newUser = new AppUser();
             newUser.setPassword(passwordEncoder.encode(requestBody.getPassword()));
             newUser.setName(requestBody.getName());
-            newUser.setUserType(requestBody.getUserType());
             newUser.setEmail(requestBody.getEmail());
             newUser.setIdentificationNumber(requestBody.getIdentificationNumber());
 
-            userRepository.save(newUser);
+        String idNumber = requestBody.getIdentificationNumber().replaceAll("[^\\d]", "");
+        if (idNumber.length() == 11) {
+            newUser.setUserType(UserType.EMPLOYEE.name());
+        } else if (idNumber.length() == 14) {
+            newUser.setUserType(UserType.COMPANY.name());
+        } else {
+            throw new BadRequestException("Número de identificação inválido.");
+        }
+
+        userRepository.save(newUser);
     }
 }

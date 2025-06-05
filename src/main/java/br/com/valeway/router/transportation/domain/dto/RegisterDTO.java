@@ -1,5 +1,6 @@
 package br.com.valeway.router.transportation.domain.dto;
 
+import br.com.valeway.router.transportation.domain.UserType;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 
@@ -10,9 +11,6 @@ public class RegisterDTO {
 
     @NotBlank
     private String name;
-
-    @NotBlank
-    private String userType;
 
     @NotBlank
     private String identificationNumber;
