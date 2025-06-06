@@ -3,6 +3,8 @@ package br.com.valeway.router.transportation.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tb_companies")
 @Data
@@ -35,4 +37,7 @@ public class Company {
 
     @Column(nullable = false)
     private String status;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Employee> employees;
 }

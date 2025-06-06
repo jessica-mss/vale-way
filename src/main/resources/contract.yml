@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: API de Roteirização de Vale Transporte
+  description: Documentação Swagger de um CRUD padrão para os recursos Empresa e Usuário.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+    description: Ambiente local
+tags:
+  - name: Empresa
+    description: Operações relacionadas a empresas
+  - name: Funcionario
+    description: Operações relacionadas ao funcionário
+  - name: Roteirização
+    description: Operações relacionadas a solicitação de roteirização
+paths:
+  /empresas:
+    get:
+      summary: Listar todas as empresas
+      tags:
+        - Empresa
+      responses:
+        '200':
+          description: Lista todas as empresas cadastradas no sistema
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompanyRepresentation'
+    post:
+      summary: UC01 - Cadastrar Empresa
+      tags:
+        - Empresa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRepresentation'
+      responses:
+        '201':
+          description: Empresa criada com sucesso
+  /empresas/{id_empresa}:
+    get:
+      summary: Buscar uma empresa pelo ID
+      tags:
+        - Empresa
+      parameters:
+        - $ref: '#/components/parameters/IdEmpresaParam'
+      responses:
+        '200':
+          description: Empresa encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyRepresentation'
+    put:
+      summary: UC02 - Editar Empresa
+      tags:
+        - Empresa
+      parameters:
+        - $ref: '#/components/parameters/IdEmpresaParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRepresentation'
+      responses:
+        '200':
+          description: Empresa atualizada com sucesso
+    delete:
+      summary: Deletar uma empresa pelo ID
+      tags:
+        - Empresa
+      parameters:
+        - $ref: '#/components/parameters/IdEmpresaParam'
+      responses:
+        '204':
+          description: Empresa deletada com sucesso
+  /empresas/{id_empresa}/funcionarios:
+    get:
+      summary: Buscar uma empresa pelo ID
+      tags:
+        - Empresa
+      parameters:
+        - $ref: '#/components/parameters/IdEmpresaParam'
+      responses:
+        '200':
+          description: Empresa encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyRepresentation'
+  /funcionarios:
+    get:
+      summary: Listar todos os funcionarios
+      tags:
+        - Funcionario
+      responses:
+        '200':
+          description: Lista todos os funcionarios cadastrados no sistema
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeRepresentation'
+    post:
+      summary: UC03 - Cadastrar Funcionário
+      tags:
+        - Funcionario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRepresentation'
+      responses:
+        '201':
+          description: Funcionario criado com sucesso
+  /funcionarios/{id_funcionario}:
+    get:
+      summary: Buscar um funcionario pelo ID
+      tags:
+        - Funcionario
+      parameters:
+        - $ref: '#/components/parameters/IdFuncionarioParam'
+      responses:
+        '200':
+          description: Funcionario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeRepresentation'
+    put:
+      summary: UC02 - Editar Funcionario
+      tags:
+        - Funcionario
+      parameters:
+        - $ref: '#/components/parameters/IdFuncionarioParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeRepresentation'
+      responses:
+        '200':
+          description: Empresa atualizada com sucesso
+
+    delete:
+      summary: Deletar um funcionario pelo ID
+      tags:
+        - Funcionario
+      parameters:
+        - $ref: '#/components/parameters/IdFuncionarioParam'
+      responses:
+        '204':
+          description: Funcionario deletado com sucesso
+  /funcionarios/{id_funcionario}/roteirizacao:
+    get:
+      summary: UC04 - Solicitar Roteirização / UC06 - Exibir trajeto/valor
+      tags:
+        - Roteirização
+      parameters:
+        - $ref: '#/components/parameters/IdFuncionarioParam'
+      responses:
+        '200':
+          description: rota encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoteirizacaoRepresentation'
+  /roteirizacao/solicitacao:
+    post:
+      summary: UC05 - Registrar Vinculo
+      tags:
+        - Roteirização
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CadastroRotaRepresentation'
+      responses:
+        '201':
+          description: Solicitação enviada com sucesso
+  /roteirizacao/validacao:
+    post:
+      summary: UC07 - Validar Roteirização
+      tags:
+        - Roteirização
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoteirizacaoRepresentation'
+      responses:
+        '201':
+          description: Validação enviada com sucesso
+components:
+  parameters:
+    IdEmpresaParam:
+      name: id_empresa
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID da empresa
+    IdFuncionarioParam:
+      name: id_funcionario
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID do funcionário
+  schemas:
+    TransporteRepresentation:
+      properties:
+        id:
+          type: integer
+          example: 1
+    RoteirizacaoRepresentation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        enderecoOrigem:
+          type: string
+          example: Rua do Espigão - São Paulo/SP - 12345678
+        transporte:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransporteRepresentation'
+        enderecoDestino:
+          type: string
+          example: Rua das Inovações, 123 - Cidade Nova/SP - 12345678
+        valorDiario:
+          type: number
+          example: 16.50
+    CadastroRotaRepresentation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: Ana Maria
+        cpf:
+          type: string
+          example: 123.345.678-90
+        enderecoOrigem:
+          type: string
+          example: Rua das Inovações, 123 - Cidade Nova/SP - 12345678
+        razaoSocial:
+          type: string
+          example: InovaSol Solutions LTDA
+        cnpj:
+          type: string
+          example: 12.345.678/0001-90
+        enderecoDestino:
+          type: string
+          example: Rua das Inovações, 123 - Cidade Nova/SP - 12345678
+    EmployeeRepresentation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        matricula:
+          type: integer
+          example: 785009
+        nome:
+          type: string
+          example: Ana Maria
+        cpf:
+          type: string
+          example: 123.345.678-90
+        salario:
+          type: number
+          example: 5000
+        endereco:
+          type: string
+          example: Rua das Inovações, 123 - Cidade Nova/SP - 12345678
+        empresa:
+          type: string
+          example: 12.345.678/0001-90
+        vinculoRegistrado:
+          type: boolean
+          example: true
+    CompanyRepresentation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        razaoSocial:
+          type: string
+          example: InovaSol Solutions LTDA
+        cnpj:
+          type: string
+          example: 12.345.678/0001-90
+        endereco:
+          type: string
+          example: Rua das Inovações, 123 - Cidade Nova/SP - 12345678
+        email:
+          type: string
+          example: company@email.com
+        telefone:
+          type: string
+          example: (11) 92345-6789
+        responsavel:
+          type: string
+          example: Luciana Hernandez

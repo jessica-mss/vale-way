@@ -2,6 +2,7 @@ package br.com.valeway.router.transportation.controller;
 
 import br.com.valeway.router.transportation.domain.Company;
 import br.com.valeway.router.transportation.domain.dto.CompanyRequestDTO;
+import br.com.valeway.router.transportation.domain.dto.EmployeesByCompanyDTO;
 import br.com.valeway.router.transportation.service.CompanyService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,12 @@ public class CompanyController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/employees")
+    public ResponseEntity<EmployeesByCompanyDTO> getEmpresaComFuncionarios(@PathVariable Long id) {
+        EmployeesByCompanyDTO representation = service.buscarEmpresaComFuncionarios(id);
+        return ResponseEntity.ok(representation);
     }
 }
 
